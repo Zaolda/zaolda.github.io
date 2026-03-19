@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>工作看板 · 公域运营</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif; background: #f5f5f3; color: #1a1a1a; padding: 24px 16px; }
+  h1 { font-size: 18px; font-weight: 500; margin-bottom: 4px; color: #1a1a1a; }
+  .subtitle { font-size: 13px; color: #888; margin-bottom: 20px; }
+  .dash { display: flex; flex-direction: column; gap: 12px; max-width: 720px; margin: 0 auto; }
+  .card { background: #fff; border: 0.5px solid rgba(0,0,0,0.1); border-radius: 12px; padding: 1.25rem; }
+  .section-title { font-size: 12px; font-weight: 500; color: #888; margin-bottom: 12px; }
+  .grid4 { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 10px; }
+  .grid2 { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; }
+  .metric { background: #f5f5f3; border-radius: 8px; padding: 12px; text-align: center; }
+  .metric-num { font-size: 22px; font-weight: 500; color: #1a1a1a; }
+  .metric-label { font-size: 11px; color: #888; margin-top: 4px; }
+  .metric-sub { font-size: 11px; color: #aaa; margin-top: 2px; }
+  .month-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 10px; margin-bottom: 14px; }
+  .month-card { background: #f5f5f3; border-radius: 8px; padding: 12px; }
+  .month-name { font-size: 12px; color: #888; margin-bottom: 6px; }
+  .month-num { font-size: 20px; font-weight: 500; color: #1a1a1a; }
+  .month-detail { font-size: 11px; color: #aaa; margin-top: 4px; line-height: 1.6; }
+  .month-active { background: #EEEDFE; }
+  .month-active .month-name { color: #534AB7; }
+  .month-active .month-num { color: #3C3489; }
+  .month-active .month-detail { color: #7F77DD; }
+  .bar-wrap { margin-bottom: 10px; }
+  .bar-header { display: flex; justify-content: space-between; margin-bottom: 5px; }
+  .bar-name { font-size: 13px; color: #1a1a1a; }
+  .bar-val { font-size: 13px; font-weight: 500; color: #1a1a1a; }
+  .bar-bg { background: #f5f5f3; border-radius: 4px; height: 6px; }
+  .bar-fill { height: 6px; border-radius: 4px; background: #534AB7; }
+  .bar-fill-green { background: #1D9E75; }
+  .row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 0.5px solid rgba(0,0,0,0.07); }
+  .row:last-child { border-bottom: none; }
+  .badge { font-size: 11px; padding: 2px 8px; border-radius: 6px; }
+  .tag-p { background: #EEEDFE; color: #3C3489; }
+  .tag-t { background: #E1F5EE; color: #085041; }
+  .edit-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+  .edit-label { font-size: 13px; color: #666; min-width: 72px; }
+  input[type=number] { width: 64px; font-size: 13px; padding: 5px 8px; border: 0.5px solid rgba(0,0,0,0.2); border-radius: 8px; background: #fff; color: #1a1a1a; text-align: center; outline: none; }
+  input[type=number]:focus { border-color: #534AB7; }
+  button.update-btn { font-size: 13px; padding: 6px 18px; border: 0.5px solid rgba(0,0,0,0.2); border-radius: 8px; background: #fff; color: #1a1a1a; cursor: pointer; margin-top: 4px; }
+  button.update-btn:hover { background: #f5f5f3; }
+  .msg-ok { font-size: 12px; color: #0F6E56; margin-top: 8px; display: none; }
+  .tip-box { background: #f5f5f3; border-radius: 8px; padding: 12px 16px; font-size: 13px; color: #555; line-height: 1.8; }
+  .highlight { color: #3C3489; font-weight: 500; }
+  .tag-new { font-size: 10px; background: #E1F5EE; color: #085041; padding: 1px 6px; border-radius: 4px; margin-left: 6px; vertical-align: middle; }
+  .footer { text-align: center; font-size: 12px; color: #bbb; margin-top: 8px; padding-bottom: 8px; }
+  @media (max-width: 480px) {
+    .grid4 { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    .grid2 { grid-template-columns: 1fr; }
+    .month-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div style="max-width:720px; margin: 0 auto;">
+  <h1>工作看板</h1>
+  <p class="subtitle">公域运营专员 · AI×知识付费 · 2025年1月—至今</p>
+</div>
+
+<div class="dash">
+
+  <div class="card">
+    <p class="section-title">总体进度 · 1月—3月</p>
+    <div class="grid4">
+      <div class="metric">
+        <div class="metric-num" id="total-clips">88</div>
+        <div class="metric-label">累计剪辑</div>
+        <div class="metric-sub">三个月总计</div>
+      </div>
+      <div class="metric">
+        <div class="metric-num">8</div>
+        <div class="metric-label">管理账号</div>
+        <div class="metric-sub">高频 4 个</div>
+      </div>
+      <div class="metric">
+        <div class="metric-num" id="avg-day">1.4</div>
+        <div class="metric-label">日均剪辑</div>
+        <div class="metric-sub">约工作日</div>
+      </div>
+      <div class="metric">
+        <div class="metric-num">3</div>
+        <div class="metric-label">线下出差</div>
+        <div class="metric-sub">深圳/北京/上海</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="section-title">每月剪辑量对比</p>
+    <div class="month-grid">
+      <div class="month-card">
+        <div class="month-name">1月</div>
+        <div class="month-num">32 条</div>
+        <div class="month-detail">信息流 24 · 剧情 1<br>口播 5 · 其他 2</div>
+      </div>
+      <div class="month-card">
+        <div class="month-name">2月</div>
+        <div class="month-num">27 条</div>
+        <div class="month-detail">信息流 11 · 剧情 5<br>干货 5 · 线下课 6</div>
+      </div>
+      <div class="month-card month-active">
+        <div class="month-name">3月（截至18日）<span class="tag-new">进行中</span></div>
+        <div class="month-num" id="mar-total">29 条</div>
+        <div class="month-detail" id="mar-detail">信息流 17 · 剧情 3<br>线下课 5 · 其他 4</div>
+      </div>
+    </div>
+    <div>
+      <div class="bar-wrap">
+        <div class="bar-header"><span class="bar-name">1月</span><span class="bar-val">32</span></div>
+        <div class="bar-bg"><div class="bar-fill" style="width:100%"></div></div>
+      </div>
+      <div class="bar-wrap">
+        <div class="bar-header"><span class="bar-name">2月</span><span class="bar-val">27</span></div>
+        <div class="bar-bg"><div class="bar-fill" style="width:84%"></div></div>
+      </div>
+      <div class="bar-wrap">
+        <div class="bar-header"><span class="bar-name">3月（截至18日）</span><span class="bar-val" id="mar-bar-val">29</span></div>
+        <div class="bar-bg"><div class="bar-fill bar-fill-green" id="mar-bar" style="width:91%"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="section-title">3月内容类型分布</p>
+    <div class="grid2">
+      <div>
+        <p style="font-size:12px;color:#aaa;margin-bottom:6px;">剪辑明细</p>
+        <div class="row"><span class="bar-name">AI信息流</span><span class="badge tag-p">17 条</span></div>
+        <div class="row"><span class="bar-name">线下课视频</span><span class="badge tag-p">5 条</span></div>
+        <div class="row"><span class="bar-name">剧情视频</span><span class="badge tag-p">3 条</span></div>
+        <div class="row"><span class="bar-name">带货视频</span><span class="badge tag-p">2 条</span></div>
+        <div class="row"><span class="bar-name">小红书干货</span><span class="badge tag-p">1 条</span></div>
+        <div class="row"><span class="bar-name">直播回放切片</span><span class="badge tag-p">1 条</span></div>
+      </div>
+      <div>
+        <p style="font-size:12px;color:#aaa;margin-bottom:6px;">其他工作</p>
+        <div class="row"><span class="bar-name">上海出差</span><span class="badge tag-t">3月7–8日</span></div>
+        <div class="row"><span class="bar-name">信息流案例库</span><span class="badge tag-t">+8条（第4组）</span></div>
+        <div class="row"><span class="bar-name">公众号案例库</span><span class="badge tag-t">按需归档</span></div>
+        <div class="row"><span class="bar-name">投放/数据记录</span><span class="badge tag-t">日常</span></div>
+        <div class="row"><span class="bar-name">私域协助</span><span class="badge tag-t">日常</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <p class="section-title">更新3月数据</p>
+    <div class="edit-row">
+      <span class="edit-label">信息流</span>
+      <input type="number" id="i-liuliang" value="17" min="0">
+      <span class="edit-label">线下课</span>
+      <input type="number" id="i-xiaxia" value="5" min="0">
+    </div>
+    <div class="edit-row">
+      <span class="edit-label">剧情</span>
+      <input type="number" id="i-juqing" value="3" min="0">
+      <span class="edit-label">带货</span>
+      <input type="number" id="i-daihuo" value="2" min="0">
+    </div>
+    <div class="edit-row">
+      <span class="edit-label">干货/其他</span>
+      <input type="number" id="i-other" value="2" min="0">
+    </div>
+    <button class="update-btn" onclick="updateMar()">更新数据 ↺</button>
+    <div class="msg-ok" id="update-msg">已更新！</div>
+  </div>
+
+  <div class="card">
+    <p class="section-title">本月月报建议用语</p>
+    <div class="tip-box">
+      在阿庄姐的指导下，本月独立完成 <span class="highlight" id="tip-num">29</span> 条视频剪辑，涵盖信息流、剧情、线下课等多种类型，持续保障4个平台账号的稳定内容输出；同期赴上海协助线下课拍摄，补充完善信息流案例库第4组共8条对标内容，持续提升素材体系的完整度。
+    </div>
+  </div>
+
+  <div class="footer">数据最后更新：<span id="last-update"></span> · 本地文件，仅自己可见</div>
+
+</div>
+
+<script>
+  document.getElementById('last-update').textContent = new Date().toLocaleDateString('zh-CN');
+
+  function updateMar() {
+    var ll = parseInt(document.getElementById('i-liuliang').value) || 0;
+    var xx = parseInt(document.getElementById('i-xiaxia').value) || 0;
+    var jq = parseInt(document.getElementById('i-juqing').value) || 0;
+    var dh = parseInt(document.getElementById('i-daihuo').value) || 0;
+    var ot = parseInt(document.getElementById('i-other').value) || 0;
+    var total = ll + xx + jq + dh + ot;
+
+    document.getElementById('mar-total').textContent = total + ' 条';
+    document.getElementById('mar-bar-val').textContent = total;
+    document.getElementById('mar-bar').style.width = Math.round(total / 32 * 100) + '%';
+    document.getElementById('mar-detail').innerHTML = '信息流 ' + ll + ' · 剧情 ' + jq + '<br>线下课 ' + xx + ' · 其他 ' + (dh + ot);
+
+    var grandTotal = 32 + 27 + total;
+    document.getElementById('total-clips').textContent = grandTotal;
+    document.getElementById('avg-day').textContent = (grandTotal / 63).toFixed(1);
+    document.getElementById('tip-num').textContent = total;
+    document.getElementById('last-update').textContent = new Date().toLocaleDateString('zh-CN');
+
+    var msg = document.getElementById('update-msg');
+    msg.style.display = 'block';
+    setTimeout(function(){ msg.style.display = 'none'; }, 2000);
+  }
+</script>
+</body>
+</html>
